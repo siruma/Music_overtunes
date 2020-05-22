@@ -60,7 +60,7 @@ def writeWAVE(fname, data):
     file.writeframes(data)
     file.close()
 
-#Read and writes txt-files
+#Read txt-files and play it
 def readTXT(fileName, notePlayer):
     file = open(fileName, 'r')
     Lines = file.read().split(' ')
@@ -70,6 +70,30 @@ def readTXT(fileName, notePlayer):
         time.sleep(0.5)
     file.close()
 
+#Write txt-file 
+def writeTXT(fileName, notePlayer):
+    file = open(fileName, 'w')
+
+#Play the piano from keyport
+
+def playKey(piano_keys, nplayer):
+    for event in pygame.event.get():
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_ESCAPE:
+                exit()
+            elif event.key == pygame.K_a:
+                nplayer.play(piano_keys[0] + '.wav')
+            elif event.key == pygame.K_s:
+                nplayer.play(piano_keys[1] + '.wav')
+            elif event.key == pygame.K_d:
+                nplayer.play(piano_keys[2] + '.wav')
+            elif event.key == pygame.K_f:
+                nplayer.play(piano_keys[3] + '.wav')
+            elif event.key == pygame.K_g:
+                nplayer.play(piano_keys[4] + '.wav')
+            else:
+                nplayer.playRandom()
+            time.sleep(0.5)
 
 #Play a WAV file
 class NotePlayer:
@@ -167,23 +191,7 @@ def main():
         piano_keys = getList(notes)
         print(piano_keys)
         while True:
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        exit()
-                    elif event.key == pygame.K_a:
-                        nplayer.play(piano_keys[0] + '.wav')
-                    elif event.key == pygame.K_s:
-                        nplayer.play(piano_keys[1] + '.wav')
-                    elif event.key == pygame.K_d:
-                        nplayer.play(piano_keys[2] + '.wav')
-                    elif event.key == pygame.K_f:
-                        nplayer.play(piano_keys[3] + '.wav')
-                    elif event.key == pygame.K_g:
-                        nplayer.play(piano_keys[4] + '.wav')
-                    else:
-                        nplayer.playRandom()
-                    time.sleep(0.5)
+            playKey(piano_keys,nplayer)
 
 #Call main
 if __name__ == "__main__":
