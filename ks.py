@@ -60,6 +60,17 @@ def writeWAVE(fname, data):
     file.writeframes(data)
     file.close()
 
+#Read and writes txt-files
+def readTXT(fileName, notePlayer):
+    file = open(fileName, 'r')
+    Lines = file.read().split(' ')
+    for key in Lines:
+        print("Playing file %s.wav" % key)
+        notePlayer.play(key + ".wav")
+        time.sleep(0.5)
+    file.close()
+
+
 #Play a WAV file
 class NotePlayer:
     #Constructor
@@ -99,6 +110,7 @@ def main():
     parser.add_argument('--piano', action='store_true', required=False)
     parser.add_argument('--japan', action='store_true',required=False)
     parser.add_argument('--china', action='store_true',required=False)
+    parser.add_argument('--inFile', dest='inFile', required=False)
     args = parser.parse_args()
 
     #Show plot if flag set
@@ -136,15 +148,18 @@ def main():
     
     #Play random tune
     if args.play:
-        while True:
-            nplayer.playRandom()
-            #Rest -1 to 8 beats
-            rest = np.random.choice([1,2,4,8], 1, p=[0.15,0.7,0.1,0.05])
-            time.sleep(0.25*rest[0])
-            for event in pygame.event.get():
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
-                        exit()
+        if args.inFile:
+            readTXT(args.inFile, nplayer)
+        else:    
+            while True:
+                nplayer.playRandom()
+                #Rest -1 to 8 beats
+                rest = np.random.choice([1,2,4,8], 1, p=[0.15,0.7,0.1,0.05])
+                time.sleep(0.25*rest[0])
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_ESCAPE:
+                            exit()
 
     #Random piano mode
     if args.piano:
