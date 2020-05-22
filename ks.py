@@ -11,6 +11,10 @@ gShowPlot = False
 # piano C4-E(b)-F-G-B(b)-C5
 pmNotes = {'C4': 262, 'Eb': 311, 'F': 349, 'G':391, 'Bb':466}
 
+#Japanese mode
+#piano C3-D-E(b)-G-A(b)-C4
+jpmNotes = {'C3': 261, 'D': 393, 'F': 349, 'G': 391, 'Ab': 415}
+
 #Generate note of given freaquency
 def generateNote(freq):
     nSamples = 44100
@@ -50,7 +54,8 @@ class NotePlayer:
     #Constructor
     def __init__(self):
         pygame.mixer.pre_init(44100, -16, 1, 2048)
-        pygame.mixer.init()
+        pygame.init()
+        screen = pygame.display.set_mode((400, 300))
         #Dictionary of notes
         self.notes = {}
     #Add note
@@ -72,13 +77,15 @@ class NotePlayer:
 def main():
     # declare global var
     global gShowPlot
-    pygame.init()
+    #pygame.init()
+    
     parser = argparse.ArgumentParser(description= "Generating sound with Karplus String Algorithm")
 
     #Add arguments
     parser.add_argument('--display', action='store_true', required=False)
     parser.add_argument('--play', action='store_true', required=False)
     parser.add_argument('--piano', action='store_true', required=False)
+    parser.add_argument('--japan', action='store_true',required=False)
     args = parser.parse_args()
 
     #Show plot if flag set
@@ -89,8 +96,13 @@ def main():
     #Create note player
     nplayer = NotePlayer()
 
+    if args.japan:
+        notes = jpmNotes
+    else:
+        notes = pmNotes
+
     print('creating notes...')
-    for name, freq in list(pmNotes.items()):
+    for name, freq in list(notes.items()):
         fileName = name + '.wav'
         if not os.path.exists(fileName) or args.display:
             data = generateNote(freq)
@@ -110,18 +122,18 @@ def main():
     #Play random tune
     if args.play:
         while True:
-            try:
-                nplayer.playRandom()
-                #Rest -1 to 8 beats
-                rest = np.random.choice([1,2,4,8], 1, p=[0.15,0.7,0.1,0.05])
-                time.sleep(0.25*rest[0])
-            except KeyboardInterrupt:
-                exit()
+            nplayer.playRandom()
+            #Rest -1 to 8 beats
+            rest = np.random.choice([1,2,4,8], 1, p=[0.15,0.7,0.1,0.05])
+            time.sleep(0.25*rest[0])
+            for event in pygame.event.get():
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_ESCAPE:
+                        exit()
 
     #Random piano mode
     if args.piano:
         #"print("piano")
-        screen = pygame.display.set_mode((400, 300))
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
