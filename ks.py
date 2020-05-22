@@ -1,5 +1,5 @@
 import sys, os
-import time, random
+import time, random, array
 import wave, argparse, pygame
 import numpy as np
 from collections import deque
@@ -14,6 +14,13 @@ pmNotes = {'C4': 262, 'Eb': 311, 'F': 349, 'G':391, 'Bb':466}
 #Japanese mode
 #piano C3-D-E(b)-G-A(b)-C4
 jpmNotes = {'C3': 261, 'D': 393, 'F': 349, 'G': 391, 'Ab': 415}
+
+def getList(dict): 
+    list = [] 
+    for key in dict.keys(): 
+        list.append(key) 
+          
+    return list
 
 #Generate note of given freaquency
 def generateNote(freq):
@@ -67,6 +74,7 @@ class NotePlayer:
             self.notes[fileName].play()
         except:
             print(fileName + ' not found!')
+
     def playRandom(self):
         """Play a random note"""
         index = random.randint(0 , len(self.notes)-1)
@@ -134,12 +142,16 @@ def main():
     #Random piano mode
     if args.piano:
         #"print("piano")
+        piano_keys = getList(notes)
+        print(piano_keys)
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         exit()
                     #print("Key pressed")
+                    elif event.key == pygame.K_a:
+                        nplayer.play(piano_keys[0] + '.wav')
                     nplayer.playRandom()
                     time.sleep(0.5)
 
