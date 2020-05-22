@@ -8,12 +8,16 @@ from matplotlib import pyplot as plt
 # show plot of algorithm in action?
 gShowPlot = False
 # notes of a Pentatonic Minor scale
-# piano C4-E(b)-F-G-B(b)-C5
-pmNotes = {'C4': 262, 'Eb': 311, 'F': 349, 'G':391, 'Bb':466}
+# piano C3-E(b)-F-G-B(b)-C4
+pmNotes = {'C3': 261.626, 'Eb': 311.127, 'F': 349.228, 'G':391.995, 'Bb':466.146}
 
-#Japanese mode
+#Japanese scale
 #piano C3-D-E(b)-G-A(b)-C4
-jpmNotes = {'C3': 261, 'D': 393, 'F': 349, 'G': 391, 'Ab': 415}
+jpmNotes = {'C3': 261.626, 'D': 293.665, 'F': 349.228, 'G': 391.995, 'Ab': 415.305}
+
+#Chinese scale
+#piano C3-D-E-G-A-C4
+chinapmNotes = {'C3': 261.626, 'D': 293.665, 'E':329.628, 'G': 391.995, 'A': 440.000 }
 
 def getList(dict): 
     list = [] 
@@ -94,6 +98,7 @@ def main():
     parser.add_argument('--play', action='store_true', required=False)
     parser.add_argument('--piano', action='store_true', required=False)
     parser.add_argument('--japan', action='store_true',required=False)
+    parser.add_argument('--china', action='store_true',required=False)
     args = parser.parse_args()
 
     #Show plot if flag set
@@ -106,6 +111,8 @@ def main():
 
     if args.japan:
         notes = jpmNotes
+    elif args.china:
+        notes = chinapmNotes
     else:
         notes = pmNotes
 
@@ -149,10 +156,18 @@ def main():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
                         exit()
-                    #print("Key pressed")
                     elif event.key == pygame.K_a:
                         nplayer.play(piano_keys[0] + '.wav')
-                    nplayer.playRandom()
+                    elif event.key == pygame.K_s:
+                        nplayer.play(piano_keys[1] + '.wav')
+                    elif event.key == pygame.K_d:
+                        nplayer.play(piano_keys[2] + '.wav')
+                    elif event.key == pygame.K_f:
+                        nplayer.play(piano_keys[3] + '.wav')
+                    elif event.key == pygame.K_g:
+                        nplayer.play(piano_keys[4] + '.wav')
+                    else:
+                        nplayer.playRandom()
                     time.sleep(0.5)
 
 #Call main
