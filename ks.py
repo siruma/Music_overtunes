@@ -164,7 +164,7 @@ def main():
             time.sleep(5)
     
     #Play random tune
-    if args.play:
+    if args.play or args.inFile:
         if args.inFile:
             readTXT(args.inFile, nplayer)
         else:    
