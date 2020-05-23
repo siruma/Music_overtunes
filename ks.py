@@ -110,7 +110,7 @@ class NotePlayer:
 #Main method
 def main():
     # declare global var
-    global gShowPlot
+    global gShowPlot, writeBL
     #pygame.init()
     
     parser = argparse.ArgumentParser(description= "Generating sound with Karplus String Algorithm")
@@ -192,19 +192,24 @@ def main():
                         exit()
                     elif event.key == pygame.K_a:
                         nplayer.play(piano_keys[0] + '.wav')
-                        piano_list.append(piano_keys[0])
+                        if writeBL:
+                            piano_list.append(piano_keys[0])
                     elif event.key == pygame.K_s:
                         nplayer.play(piano_keys[1] + '.wav')
-                        piano_list.append(piano_keys[1])
+                        if writeBL:
+                            piano_list.append(piano_keys[1])
                     elif event.key == pygame.K_d:
                         nplayer.play(piano_keys[2] + '.wav')
-                        piano_list.append(piano_keys[2])
+                        if writeBL:
+                            piano_list.append(piano_keys[2])
                     elif event.key == pygame.K_f:
                         nplayer.play(piano_keys[3] + '.wav')
-                        piano_list.append(piano_keys[3])
+                        if writeBL:
+                            piano_list.append(piano_keys[3])
                     elif event.key == pygame.K_g:
                         nplayer.play(piano_keys[4] + '.wav')
-                        piano_list.append(piano_keys[4])
+                        if writeBL:
+                            piano_list.append(piano_keys[4])
                     else:
                         nplayer.playRandom()
                     time.sleep(0.5)
