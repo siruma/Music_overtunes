@@ -7,6 +7,7 @@ from matplotlib import pyplot as plt
 
 # show plot of algorithm in action?
 gShowPlot = False
+writeBL = False
 # notes of a Pentatonic Minor scale
 # piano C3-E(b)-F-G-B(b)-C4
 pmNotes = {'C3': 261.626, 'Eb': 311.127, 'F': 349.228, 'G':391.995, 'Bb':466.146}
@@ -60,16 +61,26 @@ def writeWAVE(fname, data):
     file.writeframes(data)
     file.close()
 
-#Read and writes txt-files
+#Read txt-files and play it
 def readTXT(fileName, notePlayer):
     file = open(fileName, 'r')
     Lines = file.read().split(' ')
     for key in Lines:
-        print("Playing file %s.wav" % key)
-        notePlayer.play(key + ".wav")
-        time.sleep(0.5)
+        if not key:
+            pass
+        else: 
+            print("Playing file %s.wav" % key)
+            notePlayer.play(key + ".wav")
+            time.sleep(0.5)
     file.close()
 
+#Write txt-file 
+def writeTXT(fileName, keys):
+    file = open(fileName, 'w')
+    for key in keys:
+        file.write(key + ' ')
+    file.close()
+    
 
 #Play a WAV file
 class NotePlayer:
@@ -111,12 +122,18 @@ def main():
     parser.add_argument('--japan', action='store_true',required=False)
     parser.add_argument('--china', action='store_true',required=False)
     parser.add_argument('--inFile', dest='inFile', required=False)
+    parser.add_argument('--outFile', dest='outFile', required=False)
     args = parser.parse_args()
 
     #Show plot if flag set
     if args.display:
         gShowPlot = True
         plt.ion()
+    
+    if args.outFile:
+        writeBL = True
+        outFile = args.outFile + '.txt'
+        piano_list = []
     
     #Create note player
     nplayer = NotePlayer()
@@ -170,17 +187,24 @@ def main():
             for event in pygame.event.get():
                 if event.type == pygame.KEYDOWN:
                     if event.key == pygame.K_ESCAPE:
+                        if writeBL:
+                            writeTXT(outFile, piano_list)
                         exit()
                     elif event.key == pygame.K_a:
                         nplayer.play(piano_keys[0] + '.wav')
+                        piano_list.append(piano_keys[0])
                     elif event.key == pygame.K_s:
                         nplayer.play(piano_keys[1] + '.wav')
+                        piano_list.append(piano_keys[1])
                     elif event.key == pygame.K_d:
                         nplayer.play(piano_keys[2] + '.wav')
+                        piano_list.append(piano_keys[2])
                     elif event.key == pygame.K_f:
                         nplayer.play(piano_keys[3] + '.wav')
+                        piano_list.append(piano_keys[3])
                     elif event.key == pygame.K_g:
                         nplayer.play(piano_keys[4] + '.wav')
+                        piano_list.append(piano_keys[4])
                     else:
                         nplayer.playRandom()
                     time.sleep(0.5)
