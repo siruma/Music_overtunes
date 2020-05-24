@@ -8,6 +8,7 @@ from matplotlib import pyplot as plt
 # show plot of algorithm in action?
 gShowPlot = False
 writeBL = False
+pygame.init()
 # notes of a Pentatonic Minor scale
 # piano C3-E(b)-F-G-B(b)-C4
 pmNotes = {'C3': 261.626, 'Eb': 311.127, 'F': 349.228, 'G':391.995, 'Bb':466.146}
@@ -81,31 +82,47 @@ def writeTXT(fileName, keys):
         file.write(key + ' ')
     file.close()
     
+#Game window
+class GameScreen:
+    #Consrtuctor
+    def __init__(self):
+        self.screen = pygame.display.set_mode((1299, 957))
+        self.pic1 = pygame.image.load(os.path.join('pictures\piano-keys.jpg'))
+        self.pic1rect = self.pic1.get_rect()
+    #Update the screen
+    def upDate(self):
+        self.screen.blit(self.pic1, self.pic1rect)
+        pygame.display.flip()
+        
 
 #Play a WAV file
 class NotePlayer:
     #Constructor
     def __init__(self):
         pygame.mixer.pre_init(44100, -16, 1, 2048)
-        pygame.init()
-        screen = pygame.display.set_mode((400, 300))
+        self.screen = GameScreen()
+        self.screen.upDate()
         #Dictionary of notes
         self.notes = {}
     #Add note
     def add(self, fileName):
         self.notes[fileName] = pygame.mixer.Sound(fileName)
+        self.screen.upDate()
     #Play note
     def play(self, fileName):
         try:
             self.notes[fileName].play()
+            self.screen.upDate()
         except:
             print(fileName + ' not found!')
+            self.screen.upDate()
 
     def playRandom(self):
         """Play a random note"""
         index = random.randint(0 , len(self.notes)-1)
         note = list(self.notes.values())[index]
         note.play()
+        self.screen.upDate()
 
 #Main method
 def main():
