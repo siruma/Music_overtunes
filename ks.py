@@ -9,6 +9,8 @@ from matplotlib import pyplot as plt
 gShowPlot = False
 writeBL = False
 pygame.init()
+
+sound_path = './sound/'
 # notes of a Pentatonic Minor scale
 # piano C3-E(b)-F-G-B(b)-C4
 pmNotes = {'C3': 261.626, 'Eb': 311.127, 'F': 349.228, 'G':391.995, 'Bb':466.146}
@@ -106,7 +108,7 @@ class NotePlayer:
         self.notes = {}
     #Add note
     def add(self, fileName):
-        self.notes[fileName] = pygame.mixer.Sound(fileName)
+        self.notes[fileName] = pygame.mixer.Sound(sound_path + fileName)
         self.screen.upDate()
     #Play note
     def play(self, fileName):
@@ -127,7 +129,7 @@ class NotePlayer:
 #Main method
 def main():
     # declare global var
-    global gShowPlot, writeBL
+    global gShowPlot, writeBL, sound_path
     #pygame.init()
     
     parser = argparse.ArgumentParser(description= "Generating sound with Karplus String Algorithm")
@@ -165,7 +167,8 @@ def main():
     print('creating notes...')
     for name, freq in list(notes.items()):
         fileName = name + '.wav'
-        if not os.path.exists(fileName) or args.display:
+        file_path = os.path.join(sound_path + fileName)
+        if not os.path.exists(file_path) or args.display:
             data = generateNote(freq)
             print('creating ' + fileName + '...')
             writeWAVE(fileName, data)
@@ -173,11 +176,11 @@ def main():
             print('fileName already created. skipping...')
         
         #Add note to player
-        nplayer.add(name + '.wav')
+        nplayer.add(fileName)
 
         #Play note if display flag set
         if args.display:
-            nplayer.play(name + '.wav')
+            nplayer.play(fileName)
             time.sleep(5)
     
     #Play random tune
@@ -229,7 +232,7 @@ def main():
                             piano_list.append(piano_keys[4])
                     else:
                         nplayer.playRandom()
-                    time.sleep(0.5)
+                    time.sleep(0.1)
 
 #Call main
 if __name__ == "__main__":
